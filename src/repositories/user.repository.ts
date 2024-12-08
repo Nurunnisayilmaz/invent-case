@@ -13,8 +13,7 @@ export class UserRepository {
     return this.repository.find();
   }
 
-  async createUser(name: string): Promise<User> {
-    const user = this.repository.create({ name });
+  async createUser(user: Partial<User>): Promise<User> {
     return this.repository.save(user);
   }
 

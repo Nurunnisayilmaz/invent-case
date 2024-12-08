@@ -24,24 +24,30 @@ export class BookService {
   }
 
   async borrowBook(userId: number, bookId: number): Promise<Book | null> {
+    console.log(userId, bookId);
     const book = await this.bookRepository.getBookById(bookId);
     const user = await this.userRepository.getUserById(userId);
+    console.log(book, user);
     if (!book || !user) {
       return null;
     }
-
+    if (book.borrowedBy !== null) {
+      console.log("This book has already been borrowed");
+    }
     book.borrowedBy = user;
     return this.bookRepository.saveBook(book);
   }
 
-  async returnBook(bookId: number, userId: number): Promise<Book | null> {
+  async returnBook(userId: number, bookId: number): Promise<Book | null> {
     const book = await this.bookRepository.getBookById(bookId);
     const user = await this.userRepository.getUserById(userId);
-
+    console.log(book, user);
     if (!book || !user) {
       return null;
     }
-
+    if (book.borrowedBy?.id !== user.id) {
+      console.log("This book was not borrowed by the provided user");
+    }
     book.borrowedBy = null;
     return this.bookRepository.saveBook(book);
   }

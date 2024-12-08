@@ -21,13 +21,25 @@ export const getBookById = async (req: Request, res: Response) => {
 };
 
 export const borrowBook = async (req: Request, res: Response) => {
-  const { bookId, userId } = req.body;
-  const book = await bookService.borrowBook(userId,bookId);
-  res.status(200).json(book);
+  const { userId, bookId } = req.params;
+  console.log(userId, bookId);
+
+  try {
+    const borrowedBook = await bookService.borrowBook(Number(userId), Number(bookId))
+    res.status(200).json(borrowedBook);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 export const returnBook = async (req: Request, res: Response) => {
-  const { bookId, userId } = req.body;
-  const book = await bookService.returnBook(bookId, userId);
-  res.status(200).json(book);
+  const { userId, bookId } = req.params;
+  console.log(userId, bookId);
+
+  try {
+    const returnedBook = await bookService.returnBook(Number(userId), Number(bookId));
+    res.status(200).json(returnedBook);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
